@@ -1,0 +1,35 @@
+version: "3.1"
+
+networks:
+  queue:
+
+volumes:
+  elasticmq-db-vol:
+
+services:
+
+  elasticmq-db:
+    image: postgres:14.2
+    container_name: elasticmq-db
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: queuedb
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes: 
+      - "elasticmq-db-vol:/var/lib/postgresql/data"
+    networks:
+      - queue
+
+  elasticmq-server:
+    build: .
+    container_name: elasticmq-server
+    volumes:
+      - "./custom.docker.conf:/opt/elasticmq.conf"
+    ports: 
+      - "9324:9324"
+      - "9325:9325"
+    networks:
+      - queue
+    depends_on:
+      - elasticmq-db

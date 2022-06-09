@@ -2,15 +2,76 @@
 
 Persisting queue data using PostgreSQL.
 
-## Start Database
+## Build and Run Locally
+
+You need `sbt` to build.
+
+If you are using Mac:
 ```sh
-cd database && docker-compose up
+brew install sbt
 ```
 
-## Config Examples
+| The following scripts has been tested by sbt version `1.6.2`.
 
-Create queue when ElasticMQ starts:
+To build and run with debug (this will listen for a remote debugger on port 5005):
 ```sh
+sbt -jvm-debug 5005
+> project server
+> run
+```
+
+To build a jar:
+```sh
+sbt 'project server' 'set assemblyOutputPath in assembly := new File("dist/elasticmq-server.jar")' 'assembly'
+
+# the compiled jar file would be put into `dist` folder.
+```
+
+To run a jar:
+```sh
+java -jar dist/elasticmq-server.jar
+```
+
+If you would like to run with specifying a configuration file.
+```sh
+# copy example file and edit it
+cp custom.local.conf.example custom.local.conf
+
+# run with config file
+java -Dconfig.file=custom.local.conf -jar dist/elasticmq-server.jar
+```
+Note that by default, the configuration file is using the database named `queuedb`.
+
+Make sure you had prepared the database before starting ElasticMQ.
+
+## Web UI
+
+User interface for browsing queue information.
+
+Browse `http://localhost:9325/` or start locally:
+```sh
+cd ui
+yarn install
+yarn start
+```
+
+## Configurations
+
+When you run ElasticMQ server in sbt console, `rest/rest-sqs/src/main/resources/application.conf` will be loaded. By default, it is an in-memory queue.
+
+If you want to make ElasticMQ to connect to your local PostgreSQL database, you need to enable `messages-storage` configuration, for example:
+```ini
+messages-storage {
+  enabled = true
+  uri = "jdbc:postgresql://localhost:5432/queuedb"
+  driver-class = "org.postgresql.Driver"
+  username = "root"
+  password = "admin"
+}
+```
+
+If you want to create queues while ElasticMQ starts running, you could add following configurations:
+```ini
 queues {
   queue1 {
     defaultVisibilityTimeout = 10 seconds
@@ -35,38 +96,18 @@ queues {
 }
 ```
 
-Use PostgreSQL to persist data:
-```
-messages-storage {
-  enabled = true
-  uri = "jdbc:postgresql://localhost:15432/queuedb"
-  driver-class = "org.postgresql.Driver"
-  username = "root"
-  password = "admin"
-}
-```
+## Docker
 
-## Build and Run
+Use docker-compose to start ElasticMQ server and a PostgreSQL database.
 
-You need `sbt` to build.
-
-If you are using Mac:
 ```sh
-brew install sbt
-```
+docker-compose up --build
 
-To build and run with debug (this will listen for a remote debugger on port 5005):
-```sh
-sbt -jvm-debug 5005
-> project server
-> run
-```
+# or just
+docker-compose up
 
-To build a jar-with-dependencies:
-```
-sbt
-> project server
-> assembly
+# or run in detached mode
+docker-compose up -d
 ```
 
 ## Test with AWS-CLI
