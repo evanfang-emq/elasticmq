@@ -11,7 +11,7 @@ If you are using Mac:
 brew install sbt
 ```
 
-| The following scripts has been tested by sbt version `1.6.2`.
+> The following scripts has been tested by sbt version `1.6.2`.
 
 To build and run with debug (this will listen for a remote debugger on port 5005):
 ```sh
