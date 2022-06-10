@@ -48,6 +48,11 @@ Make sure you had prepared the database before starting ElasticMQ.
 
 User interface for browsing queue information.
 
+If you are using Mac and you do not have yarn installed:
+```
+brew install yarn
+```
+
 Browse `http://localhost:9325/` or start locally:
 ```sh
 cd ui
