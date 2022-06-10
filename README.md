@@ -9,6 +9,9 @@ You need `sbt` to build.
 If you are using Mac:
 ```sh
 brew install sbt
+
+# If you do not have yarn
+brew install yarn
 ```
 
 > The following scripts has been tested by sbt version `1.6.2`.
@@ -47,11 +50,6 @@ Make sure you had prepared the database before starting ElasticMQ.
 ## Web UI
 
 User interface for browsing queue information.
-
-If you are using Mac and you do not have yarn installed:
-```
-brew install yarn
-```
 
 Browse `http://localhost:9325/` or start locally:
 ```sh
