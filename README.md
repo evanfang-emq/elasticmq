@@ -99,6 +99,23 @@ queues {
 }
 ```
 
+If you want to change the queue url getting from ElasticMQ:
+```sh
+node-address {
+  protocol = http
+  host = elasticmq
+  port = 9324
+  context-path = ""
+}
+```
+Result:
+```sh
+> awslocal sqs get-queue-url --queue-name myqueue
+{
+    "QueueUrl": "http://elasticmq:9324/000000000000/myqueue"
+}
+```
+
 ## Docker
 
 Use docker-compose to start ElasticMQ server and a PostgreSQL database.
